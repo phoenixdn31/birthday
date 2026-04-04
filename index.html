@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днем Рождения, Арзу! | Эпизод с твоим 29-летием</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        friends: {
+                            purple: '#6a4c87',
+                            yellow: '#f4c935',
+                            red: '#e23536',
+                            blue: '#1fa2d6',
+                            green: '#2e7a3c',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Arial', 'Helvetica', 'sans-serif'],
+                        'friends-title': ['"Arial Black"', 'Impact', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+
+        body {
+            background-color: #6a4c87;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .handwriting { font-family: 'Caveat', cursive; }
+        .dot-red { color: #e23536; }
+        .dot-blue { color: #1fa2d6; }
+        .dot-yellow { color: #f4c935; }
+        .friends-text { font-family: 'Arial Black', Impact, sans-serif; text-transform: uppercase; letter-spacing: 0.1em; }
+
+        /* --- СТАРТОВЫЙ ЭКРАН (ДВЕРЬ) --- */
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #6a4c87;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+            cursor: pointer;
+        }
+        #start-screen.hidden-screen {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .door-frame-large {
+            border: 15px solid #f4c935;
+            border-radius: 8px;
+            padding: 40px;
+            position: relative;
+            background: #6a4c87;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: pulseFrame 2s infinite alternate;
+        }
+        @keyframes pulseFrame {
+            from { box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.5); transform: scale(1); }
+            to { box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 10px 40px rgba(244, 201, 53, 0.4); transform: scale(1.02); }
+        }
+        .peephole-large {
+            width: 40px;
+            height: 40px;
+            background: #111;
+            border-radius: 50%;
+            border: 5px solid #888;
+            box-shadow: 0 0 10px rgba(0,0,0,0.8);
+            margin-bottom: 30px;
+        }
+
+
+        /* Рамка Моники (внутри сайта) */
+        .monica-frame { position: relative; border: 12px solid #f4c935; border-radius: 8px; box-shadow: inset 0 0 15px rgba(0,0,0,0.3), 0 10px 25px rgba(0,0,0,0.4); background: rgba(255, 255, 255, 0.95); }
+        .peephole { width: 30px; height: 30px; background: #111; border-radius: 50%; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); border: 4px solid #888; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+
+        /* Полароид */
+        .polaroid { background: white; padding: 10px 10px 25px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: transform 0.3s ease, z-index 0s; position: relative; z-index: 1; }
+        .polaroid:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 10; }
+        .polaroid-img-placeholder { background: #e5e7eb; width: 100%; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; color: #888; overflow: hidden; margin-bottom: 12px; }
+        .polaroid-img-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Сертификат Central Perk */
+        .central-perk-coupon { background: #fff; border: 4px dashed #2e7a3c; border-radius: 12px; position: relative; }
+        .central-perk-coupon::before, .central-perk-coupon::after { content: ''; position: absolute; top: 50%; width: 30px; height: 30px; background: #6a4c87; border-radius: 50%; transform: translateY(-50%); }
+        .central-perk-coupon::before { left: -15px; } .central-perk-coupon::after { right: -15px; }
+
+        /* --- АНИМАЦИИ ПАСХАЛОК --- */
+        #giant-turkey { position: fixed; top: -100vh; left: 50%; transform: translateX(-50%); font-size: 200px; z-index: 2000; pointer-events: none; transition: top 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-shadow: 0 20px 30px rgba(0,0,0,0.5); line-height: 1; }
+        #giant-turkey.show-turkey { top: 20vh; }
+        .turkey-glasses { position: absolute; font-size: 100px; top: 40px; left: 50px; transform: rotate(15deg); }
+
+        .shake-intense { animation: intenseShake 0.1s infinite; }
+        @keyframes intenseShake { 0% { transform: translate(5px, 5px) rotate(0deg); } 10% { transform: translate(-5px, -8px) rotate(-2deg); } 20% { transform: translate(-10px, 0px) rotate(2deg); } 30% { transform: translate(0px, 8px) rotate(0deg); } 40% { transform: translate(5px, -5px) rotate(2deg); } 50% { transform: translate(-5px, 8px) rotate(-2deg); } 60% { transform: translate(-10px, 5px) rotate(0deg); } 70% { transform: translate(8px, 5px) rotate(-2deg); } 80% { transform: translate(-5px, -5px) rotate(2deg); } 90% { transform: translate(8px, 8px) rotate(0deg); } 100% { transform: translate(5px, -8px) rotate(-2deg); } }
+        
+        #seven-overlay, #trifle-overlay, #joey-30-overlay, #joey-food-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+
+
+        
+        .seven-text { font-size: 10vw; line-height: 1.1; color: white; text-shadow: 0 0 20px #e23536, 0 0 40px #e23536; animation: pulseText 0.2s infinite alternate; }
+        @media (min-width: 768px) { .seven-text { font-size: 6vw; } }
+        @keyframes pulseText { from { transform: scale(1); } to { transform: scale(1.15); } }
+
+        #smelly-cat-container { position: fixed; inset: 0; pointer-events: none; z-index: 1500; overflow: hidden; }
+        .flying-item { position: absolute; font-size: 40px; left: -100px; animation: flyAcross linear forwards; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3)); }
+        @keyframes flyAcross { 0% { left: -100px; transform: rotate(0deg) translateY(0); } 50% { transform: rotate(180deg) translateY(-50px); } 100% { left: 110vw; transform: rotate(360deg) translateY(0); } }
+
+        #pivot-couch { position: fixed; bottom: 20%; left: -300px; font-size: 80px; z-index: 1000; display: none; pointer-events: none; }
+        .pivot-animation { display: block !important; animation: pivotMove 4s linear forwards, shake 0.5s infinite; }
+        @keyframes pivotMove { 0% { left: -300px; transform: rotate(-10deg); } 50% { left: 50%; transform: rotate(10deg); } 100% { left: 120vw; transform: rotate(-10deg); } }
+        @keyframes shake { 0%, 100% { margin-top: 0; } 50% { margin-top: -15px; } }
+
+        #joey-pizza { position: fixed; bottom: 20px; left: 20px; font-size: 45px; z-index: 50; cursor: pointer; transition: top 0.15s ease-out, left 0.15s ease-out; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+
+        #break-stamp { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(5); opacity: 0; z-index: 9000; pointer-events: none; color: #e23536; border: 8px solid #e23536; padding: 20px; border-radius: 10px; font-family: 'Arial Black', Impact, sans-serif; font-size: 4vw; text-align: center; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); box-shadow: 0 0 20px rgba(226, 53, 54, 0.5), inset 0 0 20px rgba(226, 53, 54, 0.5); background: rgba(255,255,255,0.9); }
+        .stamp-animation { animation: stampDrop 3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes stampDrop { 0% { transform: translate(-50%, -50%) scale(5) rotate(20deg); opacity: 0; } 10% { transform: translate(-50%, -50%) scale(1) rotate(-10deg); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1) rotate(-10deg); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.5) rotate(-10deg); opacity: 0; } }
+
+        #joey-slide { position: fixed; bottom: -150px; right: 20px; background: #f4c935; color: #111; padding: 15px 25px; border-radius: 30px 30px 0 30px; font-size: 24px; font-weight: bold; z-index: 2000; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 4px solid #fff; }
+        #joey-slide.show { bottom: 20px; }
+
+        .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .quiz-btn.correct { background-color: #22c55e !important; color: white !important; border-color: #22c55e !important; }
+        .quiz-btn.wrong { background-color: #ef4444 !important; color: white !important; border-color: #ef4444 !important; }
+    </style>
+</head>
+<body class="text-white min-h-screen relative">
+
+    <!-- ГЛАВНАЯ ФОНОВАЯ МУЗЫКА (ЗАСТАВКА) -->
+    <!-- Убери комментарий ниже и впиши имя файла. Музыка заиграет после клика по двери -->
+    <audio id="bg-music">
+        <source src="friends-theme.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- СТАРТОВЫЙ ЭКРАН (ДВЕРЬ МОНИКИ) -->
+    <div id="start-screen" onclick="enterApartment()">
+        <div class="door-frame-large">
+            <div class="peephole-large"></div>
+            <h1 class="friends-text text-4xl sm:text-6xl text-center mb-4 text-white">
+                А<span class="dot-red">.</span>Р<span class="dot-blue">.</span>З<span class="dot-yellow">.</span>У
+            </h1>
+            <p class="handwriting text-2xl sm:text-3xl text-white opacity-80 mt-2">Нажми, чтобы войти в квартиру!</p>
+        </div>
+    </div>
+
+
+    <!-- ГЛОБАЛЬНЫЕ ОВЕРЛЕИ ПАСХАЛОК -->
+    <div id="seven-overlay"><div class="friends-text seven-text text-center">Семь!<br>Семь!<br><span class="text-friends-yellow" style="font-size: 1.8em; text-shadow: 0 0 40px #f4c935;">СЕМЬ!</span></div></div>
+    <div id="trifle-overlay">
+        <div class="bg-white text-gray-900 p-8 rounded-xl max-w-sm text-center transform rotate-2">
+            <div class="text-6xl mb-4">🥩🍮🤢</div>
+            <h3 class="friends-text text-2xl text-friends-purple mb-2">Трайфл Рэйчел</h3>
+            <p class="font-medium text-lg mb-4 text-left">Слои:<br>1. Дамские пальчики<br>2. Джем<br>3. Заварной крем<br><span class="text-red-600 font-bold">4. ГОВЯДИНА С ГОРОШКОМ</span><br>5. Бананы</p>
+            <p class="handwriting text-3xl text-red-600 font-bold border-t pt-4">"На вкус как НОГИ!"</p>
+        </div>
+    </div>
+    <div id="joey-30-overlay"><div class="text-center"><div class="text-8xl mb-4">😱</div><h2 class="friends-text text-5xl md:text-7xl text-white mb-4 leading-tight shadow-black drop-shadow-lg">ЗА ЧТО, ГОСПОДИ,<br><span class="text-friends-yellow">ЗА ЧТО?!</span></h2><p class="text-2xl font-bold bg-black/50 p-4 rounded-xl">"Мы же договаривались, что дальше не стареем!"</p></div></div>
+    <div id="pivot-couch">🛋️ <span class="text-4xl text-white font-bold bg-black/60 p-2 rounded handwriting">PIVOT!</span></div>
+    <div id="giant-turkey">🦃<div class="turkey-glasses">🕶️</div></div>
+    <div id="smelly-cat-container"></div>
+    <div id="joey-pizza" onmouseover="runAwayPizza()" onclick="eatPizza()" title="Хочешь пиццу?">🍕</div>
+    <div id="break-stamp" class="friends-text">МЫ БЫЛИ<br>НА ПЕРЕРЫВЕ!</div>
+    <div id="joey-slide" class="handwriting">Как поживаешь? 😏🥪</div>
+    <div id="joey-food-overlay">
+    <div class="text-center">
+        <div class="text-8xl mb-4">😡🍕</div>
+        <h2 class="friends-text text-5xl md:text-7xl text-white mb-4 leading-tight shadow-black drop-shadow-lg">
+            ДЖОУИ НЕ ДЕЛИТСЯ<br><span class="text-friends-red">ЕДОЙ!!!</span>
+        </h2>
+        <p class="text-2xl font-bold text-white bg-black/50 p-4 rounded-xl">Даже в день рождения Арзу!</p>
+    </div>
+</div>
+    <!-- /Конец глобальных оверлеев -->
+
+
+    <!-- ОСНОВНОЙ КОНТЕНТ СТРАНИЦЫ -->
+    <div id="page-content" class="w-full flex flex-col items-center p-4 sm:p-8">
+        
+        <div class="max-w-3xl w-full flex flex-col items-center mt-4 relative z-10">
+            
+            <h2 class="text-center text-lg sm:text-2xl font-light tracking-widest mb-6 opacity-90 uppercase">
+                Эпизод, в котором Арзу исполняется 29
+            </h2>
+
+            <div class="text-center mb-8">
+                <h1 class="friends-text text-3xl sm:text-5xl md:text-6xl mb-2 leading-tight">С Д<span class="dot-red">.</span>Н<span class="dot-blue">.</span>Е<span class="dot-yellow">.</span>М</h1>
+                <h1 class="friends-text text-3xl sm:text-5xl md:text-6xl mb-4 leading-tight">Р<span class="dot-blue">.</span>О<span class="dot-yellow">.</span>Ж<span class="dot-red">.</span>Д<span class="dot-blue">.</span>Е<span class="dot-yellow">.</span>Н<span class="dot-red">.</span>И<span class="dot-blue">.</span>Я</h1>
+                <h1 class="friends-text text-5xl sm:text-7xl md:text-8xl text-friends-yellow drop-shadow-lg">А<span class="dot-red">.</span>Р<span class="dot-blue">.</span>З<span class="dot-white" style="color:white;">.</span>У</h1>
+            </div>
+
+            <div class="monica-frame w-full max-w-2xl p-8 pt-14 mb-6 text-gray-800 text-center transition-transform hover:scale-[1.01] duration-300">
+                <div class="peephole"></div>
+                <button onclick="triggerTurkey()" class="absolute top-4 right-4 text-2xl hover:scale-125 transition-transform" title="Не нажимай на индейку!">🦃</button>
+                
+                <p class="handwriting text-4xl sm:text-5xl mb-6 text-friends-purple">Дорогая Арзу!</p>
+                <p class="text-lg sm:text-xl font-medium mb-4">С твоим потрясающим 29-летием! 🥳</p>
+                <p class="text-lg sm:text-xl font-medium mb-4">Желаю тебе всегда находить повод для радости, даже если кто-то съел твой сэндвич! Пусть в твоей жизни будет столько же смеха, сколько в квартире Моники.</p>
+                <p class="text-lg sm:text-xl font-medium">Пусть рядом будут люди, готовые пить с тобой кофе в «Центральной Кофейне» каждый день! ☕</p>
+            </div>
+
+            <div class="mb-14">
+                <button onclick="triggerTrifle()" class="bg-white/20 hover:bg-white/30 text-white border border-white/40 px-6 py-2 rounded-full flex items-center gap-2 transition-colors">
+                    <i data-lucide="cake" class="w-5 h-5"></i> Разрезать праздничный торт
+                </button>
+            </div>
+
+            <div class="w-full max-w-xl mb-14 transform rotate-1 hover:rotate-0 transition-transform">
+                <div class="central-perk-coupon p-6 sm:p-8 text-center shadow-2xl">
+                    <div class="flex justify-center mb-4 text-friends-green"><i data-lucide="coffee" class="w-12 h-12"></i></div>
+                    <h3 class="friends-text text-2xl sm:text-3xl text-friends-green mb-2 tracking-wide">Central Perk Gift</h3>
+                    <p class="text-gray-500 font-bold uppercase text-sm mb-6 tracking-widest border-b-2 border-friends-green/20 pb-4">Официальный купон</p>
+                    <p class="handwriting text-3xl sm:text-4xl text-gray-800 mb-4 leading-tight">
+                        Этот сертификат даёт право на:<br>
+                        <span class="text-friends-purple font-bold">Один невероятный ужин за мой счет! 🍷🍝</span>
+                    </p>
+                    <p class="text-xs text-gray-400 mt-6 uppercase tracking-wider">* Действителен всю жизнь. Обмену на сэндвичи Джоуи не подлежит.</p>
+                </div>
+            </div>
+
+            <h3 class="text-3xl font-bold mb-8 text-friends-yellow friends-text tracking-wide text-center drop-shadow-md">Лучшие эпизоды</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-14 w-full px-4">
+                <div class="polaroid text-center transform -rotate-3">
+                    <div class="polaroid-img-placeholder relative group">
+                        <i data-lucide="camera" class="w-12 h-12 absolute z-10 group-hover:opacity-0 transition-opacity"></i>
+                        <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500&q=80" alt="Фото 1" class="absolute inset-0 z-20">
+                    </div>
+                    <p class="handwriting text-2xl text-gray-800">Мы как Чендлер и Джоуи!</p>
+                </div>
+                <div class="polaroid text-center transform rotate-2 mt-4 sm:mt-0">
+                    <div class="polaroid-img-placeholder relative group">
+                        <i data-lucide="image" class="w-12 h-12 absolute z-10 group-hover:opacity-0 transition-opacity"></i>
+                        <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=500&q=80" alt="Фото 2" class="absolute inset-0 z-20">
+                    </div>
+                    <p class="handwriting text-2xl text-gray-800">Тот самый день 🎉</p>
+                </div>
+                <div class="polaroid text-center transform -rotate-2 mt-4 sm:mt-0">
+                    <div class="polaroid-img-placeholder relative group">
+                        <i data-lucide="heart" class="w-12 h-12 absolute z-10 group-hover:opacity-0 transition-opacity"></i>
+                        <img src="https://images.unsplash.com/photo-1543807535-eceef0bc6599?w=500&q=80" alt="Фото 3" class="absolute inset-0 z-20">
+                    </div>
+                    <p class="handwriting text-2xl text-gray-800">Всегда рядом ❤️</p>
+                </div>
+            </div>
+
+            <div class="bg-black/30 backdrop-blur-sm rounded-xl p-6 w-full max-w-2xl text-center border border-white/10 shadow-xl mb-14">
+                <h3 class="text-xl mb-4 font-semibold text-friends-yellow">Секретное послание от друзей:</h3>
+                <div id="quote-box" class="h-20 flex items-center justify-center mb-4"><p class="text-lg italic opacity-80">Нажми на кнопку ниже...</p></div>
+                <button onclick="showQuote()" class="bg-friends-yellow hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-full inline-flex items-center gap-2 transition duration-300 transform hover:-translate-y-1 shadow-lg">
+                    <i data-lucide="message-square" class="w-5 h-5"></i> Получить послание
+                </button>
+            </div>
+
+            <div class="bg-white text-gray-800 rounded-xl p-6 sm:p-8 w-full max-w-2xl shadow-2xl border-b-8 border-friends-purple mb-10 relative">
+                <button onclick="triggerSmellyCat()" class="absolute top-6 right-6 text-2xl text-friends-purple hover:scale-125 transition-transform" title="Споем?"><i data-lucide="guitar" class="w-6 h-6"></i></button>
+                <button onclick="triggerHowYouDoin()" class="absolute top-6 left-6 text-2xl hover:scale-125 transition-transform" title="Сэндвич Джоуи">🥪</button>
+
+                <div class="flex items-center justify-center gap-3 mb-6 px-10">
+                    <i data-lucide="coffee" class="text-friends-purple w-6 h-6 sm:w-8 sm:h-8"></i>
+                    <h3 class="text-2xl sm:text-3xl font-black text-center text-friends-purple friends-text tracking-normal">Дружеский Квиз</h3>
+                    <i data-lucide="coffee" class="text-friends-purple w-6 h-6 sm:w-8 sm:h-8"></i>
+                </div>
+                <p class="text-center text-gray-600 mb-6" id="quiz-intro">Насколько хорошо Арзу знает сериал «Друзья»?</p>
+                <div id="quiz-container" class="min-h-[200px]">
+                    <div class="text-center">
+                        <button onclick="startQuiz()" class="bg-friends-purple hover:bg-purple-800 text-white font-bold py-3 px-8 rounded-full transition duration-300 shadow-md text-lg">Начать игру!</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-10 w-full max-w-md text-center bg-black/20 p-4 rounded-xl border border-white/10">
+                <p class="text-white/80 mb-3 text-sm">Тебе 29... Наслаждайся этим годом по полной!</p>
+                <button onclick="triggerJoey30()" class="bg-friends-red hover:bg-red-600 text-white font-bold py-2 px-6 rounded-full text-sm transition-colors shadow-lg">Узнать, что будет в 30 🫣</button>
+            </div>
+
+            <div class="flex items-center gap-6 mb-4 opacity-50 text-sm">
+                <button onclick="triggerPivot()" class="hover:opacity-100 transition-opacity flex items-center gap-2"><i data-lucide="sofa" class="w-4 h-4"></i> Не нажимать</button>
+                <button onclick="triggerBreak()" class="hover:opacity-100 transition-opacity flex items-center gap-2 text-red-300 hover:text-red-500"><i data-lucide="heart-crack" class="w-4 h-4"></i> Перерыв</button>
+            </div>
+
+            <p class="text-white/40 text-sm mb-10 text-center">
+                Сделано с любовью для лучшей из <span onclick="clickSeven(this)" class="cursor-pointer font-bold text-white hover:text-friends-yellow transition-colors inline-block text-xl border border-dashed border-white/30 px-2 py-1 rounded">7</span> миллиардов.
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // ==========================================
+        // ЛОГИКА СТАРТОВОГО ЭКРАНА И МУЗЫКИ
+        // ==========================================
+        function enterApartment() {
+            const startScreen = document.getElementById('start-screen');
+            const bgMusic = document.getElementById('bg-music');
+            
+            // Прячем дверь
+            startScreen.classList.add('hidden-screen');
+            
+            // Включаем фоновую музыку
+            // Если файл friends-theme.mp3 существует, он заиграет.
+            bgMusic.volume = 0.7; // Делаем музыку чуть тише (50% громкости), чтобы не пугала
+            bgMusic.play().catch(e => console.log("Музыкальный файл не найден или заблокирован"));
+        }
+
+
+        // ==========================================
+        // ПАСХАЛКИ (С МЕСТАМИ ДЛЯ ЗВУКОВ)
+        // ==========================================
+
+        function triggerTurkey() {
+            // new Audio('turkey.mp3').play();
+            const turkey = document.getElementById('giant-turkey');
+            turkey.classList.add('show-turkey');
+            setTimeout(() => turkey.classList.remove('show-turkey'), 3000); 
+        }
+
+        let sevenCount = 0;
+        function clickSeven(el) {
+            sevenCount++;
+            el.style.transform = `scale(${1 + sevenCount * 0.2})`;
+            if (sevenCount === 7) {
+                new Audio('seven.mp3').play();
+                const pageContent = document.getElementById('page-content');
+                pageContent.classList.add('shake-intense');
+                const overlay = document.getElementById('seven-overlay');
+                overlay.style.display = 'flex';
+                setTimeout(() => {
+                    pageContent.classList.remove('shake-intense');
+                    overlay.style.display = 'none';
+                    sevenCount = 0;
+                    el.style.transform = 'scale(1)';
+                }, 6500);
+            }
+        }
+
+        function triggerSmellyCat() {
+            new Audio('smelly-cat.mp3').play();
+            const container = document.getElementById('smelly-cat-container');
+            const icons = ['🐱', '🐈', '🎵', '🎶', '🎸', '💨'];
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const item = document.createElement('div');
+                    item.innerText = icons[Math.floor(Math.random() * icons.length)];
+                    item.className = 'flying-item';
+                    item.style.top = Math.random() * 90 + 'vh';
+                    item.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                    container.appendChild(item);
+                    setTimeout(() => item.remove(), 6000);
+                }, i * 150); 
+            }
+        }
+
+        function triggerPivot() {
+            new Audio('pivot.mp3').play();
+            const couch = document.getElementById('pivot-couch');
+            couch.classList.remove('pivot-animation');
+            void couch.offsetWidth; 
+            couch.classList.add('pivot-animation');
+        }
+        let escapeCount = 0;
+        function runAwayPizza() {
+            escapeCount++
+            if (escapeCount > 5) {
+                return;
+            }
+            const pizza = document.getElementById('joey-pizza');
+            pizza.style.left = Math.max(10, Math.floor(Math.random() * (window.innerWidth - 60))) + 'px';
+            pizza.style.top = Math.max(10, Math.floor(Math.random() * (window.innerHeight - 60))) + 'px';
+        }
+        function eatPizza() {
+    new Audio('joey-doesnt-share.mp3').play();
+    
+    // 1. Находим наш новый оверлей
+    const overlay = document.getElementById('joey-food-overlay');
+    
+    // 2. Показываем его
+    overlay.style.display = 'flex';
+    
+    // 3. Убираем оверлей через 3.5 секунды (3500 миллисекунд)
+    setTimeout(() => { 
+        overlay.style.display = 'none'; 
+        
+        // Пицца убегает на новое место после того, как оверлей закроется
+        runAwayPizza(); 
+    }, 3500);
+}
+
+
+        function triggerHowYouDoin() {
+            new Audio('how-you-doin.mp3').play();
+            const slide = document.getElementById('joey-slide');
+            slide.classList.add('show');
+            setTimeout(() => { slide.classList.remove('show'); }, 5000);
+        }
+
+        function triggerBreak() {
+            new Audio('break.mp3').play();
+            const stamp = document.getElementById('break-stamp');
+            stamp.classList.remove('stamp-animation');
+            void stamp.offsetWidth;
+            stamp.classList.add('stamp-animation');
+            setTimeout(() => {
+                document.body.classList.add('shake-intense');
+                setTimeout(() => document.body.classList.remove('shake-intense'), 200);
+            }, 300); 
+        }
+
+        function triggerTrifle() {
+            new Audio('tastes-like-feet.mp3').play();
+            const overlay = document.getElementById('trifle-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => { overlay.style.display = 'none'; }, 5000);
+        }
+
+        function triggerJoey30() {
+            new Audio('why-god-why.mp3').play();
+            const overlay = document.getElementById('joey-30-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => { overlay.style.display = 'none'; }, 6000);
+        }
+
+
+        // ==========================================
+        // ЛОГИКА КВИЗА И ЦИТАТ
+        // ==========================================
+        const quotes = ["«Как поживаешь?» 😏 — Джоуи", "«Ты мой лобстер!» 🦞 — Фиби", "«Унаги!» 🧘‍♂️ — Росс", "«Джоуи не делится едой!» 🍕 — Джоуи", "«Мы были на перерыве!» 💔 — Росс", "«О... МОЙ... БОГ!» 😱 — Дженис"];
+        let lastQuoteIndex = -1;
+        function showQuote() {
+            const quoteBox = document.getElementById('quote-box');
+            let randomIndex;
+            do { randomIndex = Math.floor(Math.random() * quotes.length); } while (randomIndex === lastQuoteIndex && quotes.length > 1);
+            lastQuoteIndex = randomIndex;
+            quoteBox.innerHTML = '';
+            setTimeout(() => { quoteBox.innerHTML = `<p class="text-xl sm:text-2xl font-bold text-white fade-in handwriting">${quotes[randomIndex]}</p>`; }, 50);
+        }
+
+        const quizData = [
+            { question: "Сколько страниц было в письме Рэйчел к Россу?", options: ["5", "10", "18 (с двух сторон!)", "25"], correct: 2 },
+            { question: "Как зовут любимого игрушечного пингвина Джоуи?", options: ["Снежок", "Хагси", "Пингви", "Боб"], correct: 1 },
+            { question: "Какое вымышленное имя часто использует Фиби?", options: ["Реджина Фаланджи", "Принцесса Консуэла", "Анастейша Биверхаузен", "Кен Адамс"], correct: 0 },
+            { question: "Что Джоуи НИКОГДА не делает?", options: ["Не пьет кофе", "Не читает", "Не делится едой!", "Не смотрит ТВ"], correct: 2 },
+            { question: "Сколько раз был женат Росс?", options: ["Один раз", "Два раза", "Три раза", "Четыре раза"], correct: 2 }
+        ];
+
+        let currentQuestion = 0; let score = 0;
+        const quizContainer = document.getElementById('quiz-container');
+        const quizIntro = document.getElementById('quiz-intro');
+
+        function startQuiz() { currentQuestion = 0; score = 0; quizIntro.style.display = 'none'; renderQuestion(); }
+
+        function renderQuestion() {
+            const q = quizData[currentQuestion];
+            let optionsHtml = '';
+            q.options.forEach((opt, index) => {
+                optionsHtml += `<button onclick="checkAnswer(${index}, this)" class="quiz-btn w-full text-left p-4 mb-3 border-2 border-gray-200 rounded-lg hover:border-friends-purple hover:bg-purple-50 font-medium text-gray-700 transition-colors">${opt}</button>`;
+            });
+            quizContainer.innerHTML = `<div class="fade-in"><div class="flex justify-between mb-4 text-sm font-bold text-gray-400 uppercase"><span>Вопрос ${currentQuestion + 1}/${quizData.length}</span><span>Счет: ${score}</span></div><h4 class="text-xl font-bold mb-6 text-gray-800">${q.question}</h4><div id="options-container">${optionsHtml}</div><div id="next-btn-container" class="mt-6 text-right hidden"><button onclick="nextQuestion()" class="bg-gray-800 hover:bg-black text-white font-bold py-2 px-6 rounded-lg transition duration-200">Далее ➔</button></div></div>`;
+        }
+
+        function checkAnswer(selectedIndex, btn) {
+            const buttons = document.querySelectorAll('#options-container button');
+            buttons.forEach(b => { b.disabled = true; b.classList.add('opacity-70', 'cursor-not-allowed'); });
+            const correctIndex = quizData[currentQuestion].correct;
+            if (selectedIndex === correctIndex) { btn.classList.add('correct'); score++; } else { btn.classList.add('wrong'); buttons[correctIndex].classList.add('correct'); }
+            document.getElementById('next-btn-container').classList.remove('hidden');
+        }
+
+        function nextQuestion() { currentQuestion++; if (currentQuestion < quizData.length) renderQuestion(); else showResults(); }
+
+        function showResults() {
+            let resText = score === quizData.length ? "О МОЙ БОГ! Ты знаешь сериал лучше, чем создатели!" : (score >= 3 ? "Отличный результат! Ты бы точно выжил(а) в викторине Росса!" : "Неплохо, но тебе стоит пересмотреть пару сезонов с пиццей от Джоуи!");
+            let emoji = score === quizData.length ? "🏆👑" : (score >= 3 ? "👏😎" : "🍕📺");
+            quizContainer.innerHTML = `<div class="fade-in text-center py-6"><div class="text-5xl mb-4">${emoji}</div><h4 class="text-3xl font-bold mb-2 text-gray-800">Квиз завершен!</h4><p class="text-xl mb-6 text-gray-600">Правильных ответов: <span class="text-friends-purple font-bold">${score} из ${quizData.length}</span></p><p class="text-lg font-medium text-gray-800 mb-8 p-4 bg-gray-100 rounded-lg">${resText}</p><button onclick="startQuiz()" class="bg-friends-purple hover:bg-purple-800 text-white font-bold py-3 px-8 rounded-full shadow-md transition duration-300">Пройти еще раз</button></div>`;
+        }
+    </script>
+</body>
+</html>
