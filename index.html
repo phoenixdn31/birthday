@@ -495,7 +495,7 @@
         function nextQuestion() { currentQuestion++; if (currentQuestion < quizData.length) renderQuestion(); else showResults(); }
 
         function showResults() {
-            let resText = score === quizData.length ? "О МОЙ БОГ! Ты знаешь сериал лучше, чем создатели! Сезон 5, 8 серия — 20:55" : (score >= 3 ? "Отличный результат! Ты бы точно выжил(а) в викторине Росса!" : "Неплохо, но тебе стоит пересмотреть пару сезонов с пиццей от Джоуи!");
+            let resText = score === quizData.length ? "О МОЙ БОГ! Ты знаешь сериал лучше, чем создатели!<br>Сезон 5, 8 серия — 20:55" : (score >= 3 ? "Отличный результат! Ты бы точно выжил(а) в викторине Росса!" : "Неплохо, но тебе стоит пересмотреть пару сезонов с пиццей от Джоуи!");
             let emoji = score === quizData.length ? "🏆👑" : (score >= 3 ? "👏😎" : "🍕📺");
             quizContainer.innerHTML = `<div class="fade-in text-center py-6"><div class="text-5xl mb-4">${emoji}</div><h4 class="text-3xl font-bold mb-2 text-gray-800">Квиз завершен!</h4><p class="text-xl mb-6 text-gray-600">Правильных ответов: <span class="text-friends-purple font-bold">${score} из ${quizData.length}</span></p><p class="text-lg font-medium text-gray-800 mb-8 p-4 bg-gray-100 rounded-lg">${resText}</p><button onclick="startQuiz()" class="bg-friends-purple hover:bg-purple-800 text-white font-bold py-3 px-8 rounded-full shadow-md transition duration-300">Пройти еще раз</button></div>`;
         }
